@@ -169,13 +169,13 @@ export const BackendStatusModal: React.FC<BackendStatusModalProps> = ({
         <div className="mt-5 p-3 rounded-xl bg-black/20 border border-white/5 text-xs text-slate-400 space-y-1">
           <div className="font-semibold text-slate-300 flex items-center justify-between">
             <span>Expected Hackathon API Endpoints:</span>
-            <span className="text-[11px] text-ott-cyan font-mono">Problem Statement §7</span>
+            <span className="text-[11px] text-sky-400 font-mono">Problem Statement §7</span>
           </div>
           <div className="font-mono text-[11px] text-slate-400">
             • <span className="text-emerald-400">GET</span> /health → &#123; status: "ok", model_loaded: true &#125;
           </div>
           <div className="font-mono text-[11px] text-slate-400">
-            • <span className="text-ott-cyan">POST</span> /recommend → &#123; user_id, segment_id, recommendations... &#125;
+            • <span className="text-sky-400">POST</span> /recommend → &#123; user_id, segment_id, recommendations... &#125;
           </div>
         </div>
 

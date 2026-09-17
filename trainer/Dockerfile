@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy source code
 COPY trainer/ /app/trainer/
+COPY common/ /app/common/
 
 # Create target directories with correct permissions for non-root user
 RUN mkdir -p /models /app/models /app/trainer/data && \

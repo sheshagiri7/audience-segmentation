@@ -86,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onPageChange(item.id)}
-                  className={`relative px-2.5 sm:px-3.5 py-1 text-xs font-mono uppercase tracking-wider transition-all duration-150 rounded-full ${
+                  className={`relative px-2.5 sm:px-3.5 py-1 text-xs font-mono uppercase tracking-wider transition-all duration-150 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
                     isActive
                       ? 'text-white font-bold bg-white/10'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'

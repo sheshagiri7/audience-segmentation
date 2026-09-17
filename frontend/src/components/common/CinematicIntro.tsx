@@ -125,12 +125,12 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
         }`}
       >
         {/* Main Title */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.24em] sm:tracking-[0.32em] text-white uppercase select-none font-sans">
-          AUDIENCE <span className="font-semibold text-slate-100">SEGMENTATION</span>
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.24em] sm:tracking-[0.32em] text-[#F8FAFC] uppercase select-none font-sans drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
+          AUDIENCE <span className="font-semibold text-white">SEGMENTATION</span>
         </h1>
 
         {/* Minimal Supporting Subtitle */}
-        <p className="mt-3 sm:mt-4 text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.28em] sm:tracking-[0.36em] text-sky-400 uppercase opacity-75">
+        <p className="mt-3 sm:mt-4 text-[10px] sm:text-xs md:text-sm font-mono tracking-[0.28em] sm:tracking-[0.36em] text-sky-400 uppercase opacity-90">
           VIEWER INTELLIGENCE SYSTEM
         </p>
       </div>
@@ -140,7 +140,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({ onComplete }) =>
         type="button"
         onClick={completeIntro}
         aria-label="Skip intro"
-        className="absolute bottom-6 right-6 z-20 px-3 py-1.5 rounded text-[10px] font-mono tracking-widest text-slate-600 hover:text-slate-400 transition-colors uppercase"
+        className="absolute bottom-6 right-6 z-20 px-3.5 py-1.5 rounded-full text-[10px] font-mono tracking-widest text-slate-400 hover:text-white border border-white/10 hover:border-white/25 bg-white/[0.03] transition-all uppercase cursor-pointer"
       >
         [ SKIP → ]
       </button>

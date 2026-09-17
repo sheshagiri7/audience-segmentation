@@ -1,40 +1,40 @@
 {
-  "silhouette_score": 0.4112,
+  "silhouette_score": 0.4238,
   "inertia": 57394.54,
-  "davies_bouldin_index": 1.0926,
-  "calinski_harabasz_score": 2544.95,
+  "davies_bouldin_index": 1.0673,
+  "calinski_harabasz_score": 4795.6,
   "k_clusters": 4,
   "cluster_sizes": [
     {
       "segment_id": 0,
       "segment_name": "High-Engagement Action Viewers",
-      "count": 3192,
-      "percentage": 31.92
+      "count": 3182,
+      "percentage": 31.82
     },
     {
       "segment_id": 1,
       "segment_name": "Casual Short-Session Viewers",
-      "count": 3658,
-      "percentage": 36.58
+      "count": 3662,
+      "percentage": 36.62
     },
     {
       "segment_id": 2,
       "segment_name": "Genre-Explorers",
-      "count": 2364,
-      "percentage": 23.64
+      "count": 2367,
+      "percentage": 23.67
     },
     {
       "segment_id": 3,
       "segment_name": "Low-Activity Viewers",
-      "count": 786,
-      "percentage": 7.86
+      "count": 789,
+      "percentage": 7.89
     }
   ],
   "cluster_balance": {
     "is_balanced": true,
-    "min_percentage": 7.86,
-    "max_percentage": 36.58,
-    "balance_ratio": 4.65
+    "min_percentage": 7.89,
+    "max_percentage": 36.62,
+    "balance_ratio": 4.64
   },
   "stability_test": {
     "reproducibility": "Deterministic",
@@ -53,7 +53,7 @@
         "input_sample": {},
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 2.53,
+        "latency_ms": 2.22,
         "passed": true,
         "notes": "Confirms Docker healthcheck readiness",
         "error": null
@@ -72,7 +72,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 34.64,
+        "latency_ms": 34.41,
         "passed": true,
         "notes": "Expects High-Engagement Action Viewers segment with action/thriller recommendations",
         "error": null
@@ -91,7 +91,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 5.31,
+        "latency_ms": 8.94,
         "passed": true,
         "notes": "Expects Casual Short-Session Viewers segment with quick-bite comedy recommendations",
         "error": null
@@ -111,7 +111,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 6.55,
+        "latency_ms": 7.5,
         "passed": true,
         "notes": "Expects Genre-Explorers segment with eclectic recommendations",
         "error": null
@@ -129,7 +129,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 3.96,
+        "latency_ms": 6.91,
         "passed": true,
         "notes": "Expects Low-Activity Viewers segment with low-friction mainstream content",
         "error": null
@@ -148,7 +148,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 4.66,
+        "latency_ms": 3.99,
         "passed": true,
         "notes": "Must handle novel genres gracefully without KeyError or 500 error",
         "error": null
@@ -164,7 +164,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 6.3,
+        "latency_ms": 3.59,
         "passed": true,
         "notes": "Must cluster based on engagement & session metrics without failing",
         "error": null
@@ -182,7 +182,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 3.7,
+        "latency_ms": 6.28,
         "passed": true,
         "notes": "Must assign low-activity cluster without division-by-zero",
         "error": null
@@ -201,7 +201,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 6.69,
+        "latency_ms": 5.43,
         "passed": true,
         "notes": "StandardScaler must handle extreme outliers without overflow",
         "error": null
@@ -218,7 +218,7 @@
         },
         "expected_status": 422,
         "actual_status": 422,
-        "latency_ms": 1.46,
+        "latency_ms": 3.65,
         "passed": true,
         "notes": "Pydantic validation rejects with HTTP 422 and clean error message",
         "error": null
@@ -236,7 +236,7 @@
         },
         "expected_status": 422,
         "actual_status": 422,
-        "latency_ms": 1.18,
+        "latency_ms": 1.5,
         "passed": true,
         "notes": "Type validator rejects non-numeric input cleanly",
         "error": null
@@ -254,7 +254,7 @@
         },
         "expected_status": 422,
         "actual_status": 422,
-        "latency_ms": 1.08,
+        "latency_ms": 1.23,
         "passed": true,
         "notes": "Field validator rejects negative engagement quantities",
         "error": null
@@ -273,7 +273,7 @@
         },
         "expected_status": 200,
         "actual_status": 200,
-        "latency_ms": 2.82,
+        "latency_ms": 3.62,
         "passed": true,
         "notes": "Zero variance in segment assignment and centroid distance",
         "error": null
@@ -291,7 +291,7 @@
         },
         "expected_status": 422,
         "actual_status": 422,
-        "latency_ms": 1.15,
+        "latency_ms": 1.3,
         "passed": true,
         "notes": "Validator rejects empty or whitespace-only user ID",
         "error": null
@@ -302,7 +302,7 @@
         "input_sample": {},
         "expected_status": 422,
         "actual_status": 422,
-        "latency_ms": 1.19,
+        "latency_ms": 1.09,
         "passed": true,
         "notes": "FastAPI/Starlette request validation catches malformed syntax with HTTP 422",
         "error": null
@@ -310,18 +310,18 @@
     ]
   },
   "latency_stats": {
-    "avg_latency_ms": 5.74,
-    "p95_latency_ms": 16.47,
-    "min_latency_ms": 1.08,
-    "max_latency_ms": 34.64
+    "avg_latency_ms": 6.29,
+    "p95_latency_ms": 17.85,
+    "min_latency_ms": 1.09,
+    "max_latency_ms": 34.41
   },
   "api_health_status": {
     "status": "ok",
     "model_loaded": true,
     "version": "1.0.0",
-    "uptime_seconds": 6.01,
+    "uptime_seconds": 6.09,
     "model_type": "Pipeline (scaler -> kmeans)",
     "features_count": 15
   },
-  "evaluated_at": "2026-09-17T14:15:59Z"
+  "evaluated_at": "2026-09-17T16:09:01Z"
 }

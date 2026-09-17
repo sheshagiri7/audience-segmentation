@@ -50,7 +50,7 @@ def test_extract_features_handles_negatives_and_nulls():
     
     X = extract_features_from_raw(sample_df)
     assert len(X) == 1
-    assert X["watch_time_hours"].iloc[0] == 10.0  # Absolute value
+    assert X["watch_time_hours"].iloc[0] == 15.0  # Invalid negative rectified and imputed with median
     assert not pd.isna(X["avg_session_mins"].iloc[0])
     assert X["genre_count"].iloc[0] == 0.0
 

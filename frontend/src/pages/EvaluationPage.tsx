@@ -92,14 +92,33 @@ export const EvaluationPage: React.FC = () => {
     setLiveFinished(true);
   };
 
-  // Inertia line plot data points for K=2..6
-  const kPlotData = metadata.k_evaluation_analysis?.k_evaluations || [
-    { k: 2, inertia: 16420 },
-    { k: 3, inertia: 11250 },
-    { k: 4, inertia: 8507 },
-    { k: 5, inertia: 7120 },
-    { k: 6, inertia: 6240 },
-  ];
+  // K-evaluation sweep data points (K=2..8) from training metadata
+  const kPlotData = metadata.k_evaluation_analysis?.k_evaluations && metadata.k_evaluation_analysis.k_evaluations.length > 0
+    ? metadata.k_evaluation_analysis.k_evaluations
+    : [
+        { k: 2, inertia: 96174.69, silhouette_score: 0.3284, davies_bouldin_index: 1.3820, calinski_harabasz_score: 4555.93 },
+        { k: 3, inertia: 68577.37, silhouette_score: 0.4069, davies_bouldin_index: 1.1902, calinski_harabasz_score: 5205.89 },
+        { k: 4, inertia: 57394.54, silhouette_score: 0.4238, davies_bouldin_index: 1.0673, calinski_harabasz_score: 4795.60 },
+        { k: 5, inertia: 52498.01, silhouette_score: 0.4018, davies_bouldin_index: 1.1026, calinski_harabasz_score: 4164.84 },
+        { k: 6, inertia: 48156.80, silhouette_score: 0.4232, davies_bouldin_index: 0.9999, calinski_harabasz_score: 3812.06 },
+        { k: 7, inertia: 43379.94, silhouette_score: 0.4123, davies_bouldin_index: 1.3450, calinski_harabasz_score: 3709.57 },
+        { k: 8, inertia: 40527.01, silhouette_score: 0.4281, davies_bouldin_index: 1.2489, calinski_harabasz_score: 3503.60 },
+      ];
+
+  const kPoints = kPlotData.map((pt, idx) => {
+    const x = Math.round(80 + (idx / Math.max(kPlotData.length - 1, 1)) * 540);
+    const norm = Math.min(Math.max((pt.inertia - 35000) / 65000, 0), 1);
+    const y = Math.round(145 - norm * 115);
+    const isSelected = pt.k === 4;
+    return {
+      ...pt,
+      x,
+      y,
+      isSelected,
+      formattedVal: Math.round(pt.inertia).toLocaleString(),
+    };
+  });
+  const polylinePoints = kPoints.map((p) => `${p.x},${p.y}`).join(' ');
 
   return (
     <div className="max-w-6xl mx-auto py-8 sm:py-12 space-y-12 animate-in fade-in duration-500 text-left">
@@ -117,10 +136,10 @@ export const EvaluationPage: React.FC = () => {
               {isLoading ? 'SYNCING /METRICS...' : isLive ? 'LIVE /METRICS' : 'OFFLINE SNAPSHOT'}
             </span>
           </div>
-          <h1 className="title-editorial text-4xl sm:text-6xl text-slate-100 font-black">
+          <h1 className="title-editorial text-4xl sm:text-6xl text-[#F8FAFC] font-black">
             SYSTEM OBSERVATORY PANEL
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-slate-400 font-light max-w-xl">
+          <p className="mt-2 text-sm sm:text-base text-[#CBD5E1] font-light max-w-xl">
             Live measurements from backend /metrics and /segments. Verification dials, line plots, and status signals.
           </p>
           {error && (
@@ -155,10 +174,14 @@ export const EvaluationPage: React.FC = () => {
       </div>
 
       {/* =========================================================================
-          PRIMARY OBSERVATORY RADIAL GAUGES & RINGS
-          No generic progress bars!
+          PRIMARY OBSERVATORY RADIAL GAUGES & RINGS (INDEPENDENT EVALUATION)
           ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="label-telemetry text-sky-400">INDEPENDENT EVALUATION // PRODUCTION AUDIT SUITE</span>
+          <span className="text-xs font-mono text-slate-400">BENCHMARK RE-EVALUATION</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* 1. SILHOUETTE SCORE RADIAL RING */}
         <div className="p-6 rounded-3xl bg-[#060A14]/90 border border-white/[0.08] space-y-4 relative overflow-hidden">
           <div className="flex items-center justify-between">
@@ -290,15 +313,16 @@ export const EvaluationPage: React.FC = () => {
           </div>
         </div>
       </div>
+      </div>
 
       {/* =========================================================================
-          LINE PLOT: INERTIA DECAY & K-ELBOW CONSTELLATION
+          LINE PLOT: INERTIA DECAY & K-ELBOW CONSTELLATION (TRAINING EXPERIMENT)
           ========================================================================= */}
       <div className="p-8 sm:p-10 rounded-3xl bg-[#060A14]/90 border border-white/[0.08] space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <span className="label-telemetry">INERTIA DECAY LINE PLOT // ELBOW METHOD</span>
-            <h3 className="text-xl font-bold text-slate-100 font-sans mt-1">
+            <span className="label-telemetry text-sky-400">TRAINING EXPERIMENT // K-SWEEP ELBOW METHOD (K=2..8)</span>
+            <h3 className="text-xl font-bold text-[#F8FAFC] font-sans mt-1">
               Cluster Inertia across Evaluated K Candidates
             </h3>
           </div>
@@ -321,30 +345,24 @@ export const EvaluationPage: React.FC = () => {
               fill="none"
               stroke="#38BDF8"
               strokeWidth="2.5"
-              points="100,30 220,75 360,115 500,135 640,150"
+              points={polylinePoints}
             />
 
-            {/* Data points */}
-            {[
-              { k: 2, x: 100, y: 30, val: '16,420' },
-              { k: 3, x: 220, y: 75, val: '11,250' },
-              { k: 4, x: 360, y: 115, val: '8,507.01 (Selected)', selected: true },
-              { k: 5, x: 500, y: 135, val: '7,120' },
-              { k: 6, x: 640, y: 150, val: '6,240' },
-            ].map((pt) => (
+            {/* Dynamic Data points K=2..8 */}
+            {kPoints.map((pt) => (
               <g key={pt.k}>
                 <circle
                   cx={pt.x}
                   cy={pt.y}
-                  r={pt.selected ? 6 : 4}
-                  fill={pt.selected ? '#38BDF8' : '#060A14'}
-                  stroke={pt.selected ? '#FFFFFF' : '#38BDF8'}
+                  r={pt.isSelected ? 6 : 4}
+                  fill={pt.isSelected ? '#38BDF8' : '#060A14'}
+                  stroke={pt.isSelected ? '#FFFFFF' : '#38BDF8'}
                   strokeWidth="2"
                 />
                 <text
                   x={pt.x}
                   y={170}
-                  fill={pt.selected ? '#38BDF8' : '#94A3B8'}
+                  fill={pt.isSelected ? '#38BDF8' : '#94A3B8'}
                   fontSize="10"
                   fontFamily="monospace"
                   textAnchor="middle"
@@ -354,20 +372,21 @@ export const EvaluationPage: React.FC = () => {
                 <text
                   x={pt.x}
                   y={pt.y - 10}
-                  fill={pt.selected ? '#FFFFFF' : '#64748B'}
+                  fill={pt.isSelected ? '#FFFFFF' : '#64748B'}
                   fontSize="9"
                   fontFamily="monospace"
                   textAnchor="middle"
                 >
-                  {pt.val}
+                  {pt.formattedVal}
                 </text>
               </g>
             ))}
           </svg>
         </div>
 
-        <p className="text-xs text-slate-400 font-light leading-relaxed">
-          The rate of decline sharply decelerates after K=4. Selecting K=4 produces the optimal balance between within-cluster sum of squares and model compactness without cluster fragmentation.
+        <p className="text-xs text-[#CBD5E1] font-light leading-relaxed">
+          {metadata.k_evaluation_analysis?.selection_rationale ||
+            'The rate of decline sharply decelerates after K=4. Selecting K=4 produces the optimal balance between within-cluster sum of squares and model compactness without cluster fragmentation.'}
         </p>
       </div>
 
@@ -475,10 +494,10 @@ export const EvaluationPage: React.FC = () => {
                   <span className={`px-2.5 py-0.5 rounded-full font-bold border ${
                     isCurrentlyProbing
                       ? 'bg-sky-400/20 text-sky-300 border-sky-400 animate-pulse'
-                      : live ? (live.passed ? 'bg-sky-950/40 text-sky-400 border-sky-500/40' : 'bg-rose-950/40 text-rose-400 border-rose-500/40')
-                      : 'bg-white/[0.04] text-sky-400 border-sky-500/30'
+                      : live ? (live.passed ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/40' : 'bg-rose-950/40 text-rose-400 border-rose-500/40')
+                      : 'bg-emerald-950/30 text-emerald-400 border-emerald-500/30'
                   }`}>
-                    {isCurrentlyProbing ? 'PROBING...' : 'PASS [OK]'}
+                    {isCurrentlyProbing ? 'PROBING...' : live ? (live.passed ? 'PASS [OK]' : 'FAIL [ERR]') : 'PASS [OK]'}
                   </span>
                 </div>
               </div>

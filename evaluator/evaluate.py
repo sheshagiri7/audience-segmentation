@@ -30,16 +30,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger("audience_evaluator")
 
-# Canonical Catalog Genres matching Problem Statement Section 5 & 8
-CANONICAL_GENRES: List[str] = [
-    "Action", "Thriller", "Sci-Fi", "Drama", "Comedy",
-    "Romance", "Documentary", "Animation", "Family", "Horror",
-    "Crime", "Adventure"
-]
-
-FEATURE_COLUMNS: List[str] = (
-    ["watch_time_hours", "avg_session_mins", "genre_count"] +
-    [f"genre_{g}" for g in CANONICAL_GENRES]
+# Unified Preprocessing Parity conforming to Problem Statement
+from common.preprocessing import (
+    CANONICAL_GENRES,
+    FEATURE_COLUMNS,
+    extract_features_from_raw,
 )
 
 
@@ -74,68 +69,6 @@ def wait_for_api_health(base_url: str, timeout_seconds: int = 60, interval_secon
         time.sleep(interval_seconds)
 
     raise TimeoutError(f"API at {health_url} failed to become healthy within {timeout_seconds} seconds.")
-
-
-def extract_features_from_raw(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans raw user activity DataFrame and extracts the standardized 15-feature matrix.
-    Handles duplicates, missing values, outliers, negative values, and JSON genre lists.
-    """
-    df = df.copy()
-    
-    # 1. Deduplicate
-    df = df.drop_duplicates(subset=["user_id"]).reset_index(drop=True)
-    
-    # 2. Impute and sanitize numeric columns
-    for col in ["watch_time_hours", "avg_session_mins"]:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-            df[col] = df[col].abs()  # Fix negatives
-            median_val = df[col].median()
-            default_val = 15.0 if 'watch' in col else 45.0
-            if pd.isna(median_val):
-                median_val = default_val
-            df[col] = df[col].fillna(median_val)
-
-    # 3. Parse genres
-    parsed_genres = []
-    for g_val in df["top_genres"]:
-        if pd.isna(g_val) or g_val is None or g_val == "":
-            parsed_genres.append([])
-        elif isinstance(g_val, list):
-            parsed_genres.append(g_val)
-        elif isinstance(g_val, str):
-            try:
-                loaded = json.loads(g_val)
-                parsed_genres.append(loaded if isinstance(loaded, list) else [])
-            except Exception:
-                # Handle comma-separated fallback
-                parts = [p.strip().strip('"\'') for p in g_val.strip("[]").split(",") if p.strip()]
-                parsed_genres.append(parts)
-        else:
-            parsed_genres.append([])
-
-    # 4. Construct feature matrix
-    n_rows = len(df)
-    features: Dict[str, Any] = {
-        "watch_time_hours": df["watch_time_hours"].values,
-        "avg_session_mins": df["avg_session_mins"].values,
-    }
-    
-    genre_counts = []
-    genre_indicators = {f"genre_{g}": np.zeros(n_rows, dtype=np.float64) for g in CANONICAL_GENRES}
-    
-    for i, g_list in enumerate(parsed_genres):
-        cleaned_genres = {str(x).strip().lower() for x in g_list if x and str(x).strip()}
-        genre_counts.append(float(len(cleaned_genres)))
-        for g in CANONICAL_GENRES:
-            if g.lower() in cleaned_genres:
-                genre_indicators[f"genre_{g}"][i] = 1.0
-
-    features["genre_count"] = np.array(genre_counts, dtype=np.float64)
-    features.update(genre_indicators)
-    
-    return pd.DataFrame(features)[FEATURE_COLUMNS]
 
 
 def compute_real_clustering_metrics(

@@ -88,11 +88,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           <span className="label-telemetry text-sky-400">
             VIEWER INTELLIGENCE // GRAVITATIONAL MODEL
           </span>
-          <span className="text-slate-700 font-mono text-xs">|</span>
+          <span className="text-slate-600 font-mono text-xs">|</span>
           <span className="text-slate-400 font-mono text-xs tracking-wider">
             {metadata.total_training_samples.toLocaleString()} SAMPLES // K={metadata.k_clusters}
           </span>
-          <span className="text-slate-700 font-mono text-xs">|</span>
+          <span className="text-slate-600 font-mono text-xs">|</span>
           <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${
             isLive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
           }`}>
@@ -100,23 +100,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </span>
         </div>
 
-        {/* Large Editorial Headline */}
-        <div className="space-y-0">
-          <h1 className="title-editorial text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-slate-100 font-black tracking-tight leading-[0.92]">
+        {/* Large Editorial Headline with Contrast Scrim & Drop Shadow */}
+        <div className="space-y-0 relative">
+          <div className="absolute -inset-x-8 -inset-y-6 hero-scrim -z-10 rounded-3xl pointer-events-none" />
+          <h1 className="title-editorial text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-[#F8FAFC] font-black tracking-tight leading-[0.92] drop-shadow-[0_4px_24px_rgba(2,4,8,0.95)]">
             AUDIENCE
           </h1>
-          <h1 className="title-editorial text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-slate-300 font-black tracking-tight leading-[0.92] text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-300 to-slate-400">
+          <h1 className="title-editorial text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-transparent bg-clip-text bg-gradient-to-r from-[#F8FAFC] via-[#7DD3FC] to-[#E2E8F0] font-black tracking-tight leading-[0.92] drop-shadow-[0_4px_24px_rgba(2,4,8,0.95)]">
             SEGMENTATION
           </h1>
         </div>
 
+        {/* Supporting Editorial Line */}
+        <div className="mt-5 space-y-1 font-sans text-sm sm:text-base text-[#CBD5E1] font-light max-w-xl">
+          <p>Understand viewer behavior.</p>
+          <p>Discover meaningful audiences.</p>
+          <p>Personalize the experience.</p>
+        </div>
+
         {/* Action CTAs */}
-        <div className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+        <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
           <button
             onClick={() => onNavigate('analyze')}
-            className="group relative px-8 py-4 rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 font-mono font-bold text-xs sm:text-sm uppercase tracking-widest transition-all duration-200 shadow-glow-electric flex items-center justify-center space-x-3"
+            className="group relative px-8 py-4 rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 font-mono font-bold text-xs sm:text-sm uppercase tracking-widest transition-all duration-200 shadow-glow-electric flex items-center justify-center space-x-3 cursor-pointer"
           >
-            <span>ANALYZE A VIEWER</span>
+            <span>ANALYZE VIEWER</span>
             <span className="inline-block transition-transform duration-200 group-hover:translate-x-1 font-mono font-bold">
               →
             </span>
@@ -124,46 +132,46 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
           <button
             onClick={scrollToMap}
-            className="px-7 py-4 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-200 hover:text-white font-mono font-medium text-xs sm:text-sm uppercase tracking-widest transition-all flex items-center justify-center space-x-2"
+            className="px-7 py-4 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-200 hover:text-white font-mono font-medium text-xs sm:text-sm uppercase tracking-widest transition-all flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>EXPLORE AUDIENCE MAP</span>
-            <span className="text-slate-500 font-mono">↓</span>
+            <span className="text-slate-400 font-mono">↓</span>
           </button>
         </div>
 
         {/* Minimal live telemetry status readout */}
-        <div className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-mono text-slate-500">
+        <div className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-mono text-slate-400">
           <div className="flex items-center space-x-2">
             <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-sky-400 animate-pulse' : 'bg-rose-500'}`}></span>
-            <span className="text-slate-400 uppercase">
+            <span className="text-slate-300 uppercase">
               {isConnected ? 'API CONNECTED' : 'API DISCONNECTED'}
             </span>
-            <span className="text-slate-600">({latency}ms)</span>
+            <span className="text-slate-400">({latency}ms)</span>
           </div>
-          <span className="text-slate-700">|</span>
+          <span className="text-slate-600">|</span>
           <div className="flex items-center space-x-2">
             <span className="text-slate-400">FEEDS:</span>
-            <span className={isLive ? 'text-emerald-400 font-semibold' : 'text-amber-400'}>
+            <span className={isLive ? 'text-emerald-400 font-semibold' : 'text-amber-400 font-semibold'}>
               {isLive ? 'LIVE' : 'SNAPSHOT'}
             </span>
             {error && (
               <button
                 onClick={loadData}
-                className="underline hover:text-amber-200 cursor-pointer font-bold ml-1"
+                className="underline hover:text-amber-200 cursor-pointer font-bold ml-1 text-amber-400"
               >
                 [Retry]
               </button>
             )}
           </div>
-          <span className="text-slate-700">|</span>
+          <span className="text-slate-600">|</span>
           <div>
             <span>ALGORITHM: </span>
-            <span className="text-slate-300">SCALER → K-MEANS</span>
+            <span className="text-slate-200">SCALER → K-MEANS</span>
           </div>
-          <span className="text-slate-700 hidden sm:inline">|</span>
+          <span className="text-slate-600 hidden sm:inline">|</span>
           <div className="hidden sm:block">
             <span>DETERMINISM: </span>
-            <span className="text-sky-400">100% (VARIANCE 0.0)</span>
+            <span className="text-sky-400 font-semibold">100% (VARIANCE 0.0)</span>
           </div>
         </div>
       </section>
@@ -177,19 +185,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <span className="label-telemetry">AUDIENCE MAP // 4-BODY GRAVITATIONAL FIELD</span>
-            <h2 className="title-editorial text-3xl sm:text-5xl text-slate-100 font-bold mt-2">
+            <span className="label-telemetry text-sky-400">AUDIENCE MAP // 4-BODY GRAVITATIONAL FIELD</span>
+            <h2 className="title-editorial text-3xl sm:text-5xl text-[#F8FAFC] font-bold mt-2">
               SPATIAL INTELLIGENCE MAP
             </h2>
-            <p className="mt-2 text-sm text-slate-400 font-light max-w-xl">
+            <p className="mt-2 text-sm text-[#CBD5E1] font-light max-w-xl">
               Real 4-cluster behavioral topology. Hover an orbital system to inspect its gravitational footprint and viewer density.
             </p>
           </div>
 
           <div className="font-mono text-xs text-slate-400 flex items-center space-x-4">
-            <span>TOTAL VIEWERS: <strong className="text-slate-100">{metadata.total_training_samples.toLocaleString()}</strong></span>
-            <span className="text-slate-700">|</span>
-            <span>SYSTEM STABILITY: <strong className="text-sky-400">VERIFIED</strong></span>
+            <span>TOTAL VIEWERS: <strong className="text-[#F8FAFC]">{metadata.total_training_samples.toLocaleString()}</strong></span>
+            <span className="text-slate-600">|</span>
+            <span>SYSTEM STABILITY: <strong className="text-sky-400 font-semibold">VERIFIED</strong></span>
           </div>
         </div>
 
@@ -352,49 +360,49 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           ========================================================================= */}
       <section className="max-w-6xl mx-auto px-2 space-y-12">
         <div>
-          <span className="label-telemetry">BEHAVIORAL ANALYSIS // MODEL MEASUREMENTS</span>
-          <h2 className="title-editorial text-3xl sm:text-5xl text-slate-100 font-bold mt-2">
+          <span className="label-telemetry text-sky-400">BEHAVIORAL ANALYSIS // MODEL MEASUREMENTS</span>
+          <h2 className="title-editorial text-3xl sm:text-5xl text-[#F8FAFC] font-bold mt-2">
             PHYSICAL TOPOLOGY OF ENGAGEMENT
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-4">
           <div className="space-y-2 border-l border-white/15 pl-6">
-            <span className="label-telemetry">TRAINED SAMPLES</span>
-            <div className="num-oversized text-4xl sm:text-5xl text-slate-100">
+            <span className="label-telemetry text-[#94A3B8]">TRAINED SAMPLES</span>
+            <div className="num-oversized text-4xl sm:text-5xl text-[#F8FAFC]">
               {metadata.total_training_samples.toLocaleString()}
             </div>
-            <p className="text-xs text-slate-400 font-light pt-1">
+            <p className="text-xs text-[#94A3B8] font-light pt-1">
               Deterministic cleaned viewer records across 15 behavioral dimensions.
             </p>
           </div>
 
           <div className="space-y-2 border-l border-white/15 pl-6">
-            <span className="label-telemetry">DISCOVERED SYSTEMS</span>
+            <span className="label-telemetry text-[#94A3B8]">DISCOVERED SYSTEMS</span>
             <div className="num-oversized text-4xl sm:text-5xl text-sky-400">
               0{metadata.k_clusters}
             </div>
-            <p className="text-xs text-slate-400 font-light pt-1">
+            <p className="text-xs text-[#94A3B8] font-light pt-1">
               Autonomous KMeans partitions with optimal Davies-Bouldin separation.
             </p>
           </div>
 
           <div className="space-y-2 border-l border-white/15 pl-6">
-            <span className="label-telemetry">SILHOUETTE SEPARATION</span>
-            <div className="num-oversized text-4xl sm:text-5xl text-slate-100">
+            <span className="label-telemetry text-[#94A3B8]">SILHOUETTE SEPARATION</span>
+            <div className="num-oversized text-4xl sm:text-5xl text-[#F8FAFC]">
               {metrics.silhouette_score.toFixed(4)}
             </div>
-            <p className="text-xs text-slate-400 font-light pt-1">
+            <p className="text-xs text-[#94A3B8] font-light pt-1">
               Measured silhouette score confirming non-overlapping cluster boundaries.
             </p>
           </div>
 
           <div className="space-y-2 border-l border-white/15 pl-6">
-            <span className="label-telemetry">PIPELINE DETERMINISM</span>
+            <span className="label-telemetry text-[#94A3B8]">PIPELINE DETERMINISM</span>
             <div className="num-oversized text-4xl sm:text-5xl text-sky-300">
               100%
             </div>
-            <p className="text-xs text-slate-400 font-light pt-1">
+            <p className="text-xs text-[#94A3B8] font-light pt-1">
               Zero variance verified across repeated inference cycles (seed {metadata.random_seed}).
             </p>
           </div>
@@ -403,8 +411,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         {/* Action Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 p-8 rounded-3xl bg-[#060A14]/60 border border-white/[0.08]">
           <div>
-            <h3 className="text-lg font-bold text-slate-100">Ready to test a viewer profile?</h3>
-            <p className="text-xs text-slate-400 font-light mt-1">
+            <h3 className="text-lg font-bold text-[#F8FAFC]">Ready to test a viewer profile?</h3>
+            <p className="text-xs text-[#CBD5E1] font-light mt-1">
               Input watch hours, session length, and genres to calculate real-time gravitational centroid assignment.
             </p>
           </div>

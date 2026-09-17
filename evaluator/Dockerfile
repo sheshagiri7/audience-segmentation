@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy evaluator module and dataset
 COPY evaluator/ /app/evaluator/
+COPY common/ /app/common/
 COPY trainer/data/user_activity.csv /app/data/user_activity.csv
 
 # Ensure mount directories exist with appropriate non-root permissions

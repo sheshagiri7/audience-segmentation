@@ -43,7 +43,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
         className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 flex items-center justify-between text-left transition"
       >
         <div className="flex items-center space-x-2.5">
-          <Terminal className="w-4 h-4 text-ott-cyan" />
+          <Terminal className="w-4 h-4 text-sky-400" />
           <span className="text-xs font-semibold text-slate-200">{title}</span>
           <span
             className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
@@ -74,7 +74,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
         <div className="p-4 border-t border-white/10 space-y-4 text-xs font-mono">
           <div className="flex items-center justify-between pb-2 border-b border-white/5">
             <div className="flex items-center space-x-2 text-slate-400 text-[11px]">
-              <Radio className="w-3.5 h-3.5 text-ott-violet" />
+              <Radio className="w-3.5 h-3.5 text-sky-400" />
               <span>Target:</span>
               <span className="text-slate-200">{telemetry.endpointUrl}</span>
             </div>
@@ -90,7 +90,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Request Payload */}
             <div className="space-y-1.5">
-              <div className="text-[11px] font-semibold uppercase text-ott-cyan tracking-wider">
+              <div className="text-[11px] font-semibold uppercase text-sky-400 tracking-wider">
                 Request Body (POST /recommend)
               </div>
               <pre className="p-3 rounded-xl bg-black/60 border border-white/5 text-slate-300 overflow-x-auto text-[11px] leading-relaxed max-h-60 overflow-y-auto">

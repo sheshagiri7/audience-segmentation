@@ -216,8 +216,8 @@ def generate_synthetic_dataset(
 
 def get_or_create_dataset(preferred_path: Optional[str] = None) -> Tuple[pd.DataFrame, str]:
     """
-    Checks for an existing dataset file. If present, loads and returns it.
-    If not, generates a synthetic dataset conforming to the Hackathon PS.
+    Checks for the required dataset file in candidate locations.
+    Loads and returns it, or fails with a non-zero exit if not found.
     """
     candidate_paths: List[Path] = []
     if preferred_path:
@@ -225,15 +225,16 @@ def get_or_create_dataset(preferred_path: Optional[str] = None) -> Tuple[pd.Data
         if not p.exists() or not p.is_file():
             raise FileNotFoundError(
                 f"Specified dataset path does not exist or is not a file: {p.resolve()}\n"
-                "Please provide a valid CSV path with --data-path, or omit the flag to use the default synthetic dataset."
+                "Please provide a valid CSV path with --data-path."
             )
         candidate_paths.append(p)
 
     # Check common standard locations
     candidate_paths.extend([
-        Path("trainer/data/user_activity.csv"),
         Path("data/user_activity.csv"),
-        Path("trainer/user_activity.csv"),
+        Path("/app/data/user_activity.csv"),
+        Path("trainer/data/user_activity.csv"),
+        Path("/app/trainer/data/user_activity.csv"),
         Path("user_activity.csv"),
         Path("../data/user_activity.csv"),
     ])
@@ -241,12 +242,31 @@ def get_or_create_dataset(preferred_path: Optional[str] = None) -> Tuple[pd.Data
     for p in candidate_paths:
         if p.exists() and p.is_file():
             logger.info(f"Found existing dataset at: {p.resolve()}")
-            return pd.read_csv(p), str(p.resolve())
+            try:
+                df = pd.read_csv(p)
+            except Exception as e:
+                err = f"Failed to read dataset file at {p.resolve()}: {e}"
+                logger.error(err)
+                print(err, file=sys.stderr)
+                sys.exit(1)
+            if df.empty or len(df) == 0:
+                err = f"Dataset file at {p.resolve()} is empty. Training aborted."
+                logger.error(err)
+                print(err, file=sys.stderr)
+                sys.exit(1)
+            return df, str(p.resolve())
 
-    # Generate default dataset
-    target_path = Path("trainer/data/user_activity.csv")
-    df = generate_synthetic_dataset(n_records=10000, seed=42, output_path=str(target_path))
-    return df, str(target_path.resolve())
+    # Strict PS compliance: NEVER generate synthetic replacement data
+    searched = "\n  - ".join(str(p.resolve()) for p in candidate_paths)
+    err_msg = (
+        f"CRITICAL ERROR: Required dataset 'user_activity.csv' was NOT FOUND.\n"
+        f"Candidate search paths evaluated:\n  - {searched}\n"
+        "Strict Problem Statement Compliance: Synthetic fallback data generation is disabled. "
+        "The supplied dataset must be the only training source. Aborting with non-zero exit code."
+    )
+    logger.error(err_msg)
+    print(err_msg, file=sys.stderr)
+    sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@
   
   body {
     background-color: #03060C;
-    color: #E2E8F0;
+    color: #CBD5E1;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     selection-background-color: #38BDF8;
@@ -49,6 +49,13 @@
     letter-spacing: -0.03em;
     line-height: 0.95;
     text-transform: uppercase;
+    color: #F8FAFC;
+    text-shadow: 0 3px 18px rgba(3, 6, 12, 0.85);
+  }
+
+  /* Subtle background scrim for text over bright accretion disk elements */
+  .hero-scrim {
+    background: radial-gradient(ellipse at 30% 50%, rgba(3, 6, 12, 0.72) 0%, rgba(3, 6, 12, 0.35) 60%, transparent 100%);
   }
 
   .label-telemetry {

@@ -72,10 +72,10 @@ export const SegmentsPage: React.FC<SegmentsPageProps> = ({ onNavigate }) => {
               {isLoading ? 'SYNCING /SEGMENTS...' : isLive ? 'LIVE /SEGMENTS' : 'OFFLINE SNAPSHOT'}
             </span>
           </div>
-          <h1 className="title-editorial text-4xl sm:text-6xl text-slate-100 font-black">
+          <h1 className="title-editorial text-4xl sm:text-6xl text-[#F8FAFC] font-black">
             {zoomedSegment ? `SYSTEM 0${zoomedSegment.segment_id}` : 'ORBITAL AUDIENCE SYSTEMS'}
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-slate-400 font-light max-w-2xl">
+          <p className="mt-2 text-sm sm:text-base text-[#CBD5E1] font-light max-w-2xl">
             {zoomedSegment 
               ? `Deep gravitational telemetry and catalog trajectory vectors for ${zoomedSegment.segment_name}.`
               : 'Interactive 4-body gravitational architecture. Click any orbital system to zoom in and inspect its behavioral characteristics.'
@@ -292,16 +292,16 @@ export const SegmentsPage: React.FC<SegmentsPageProps> = ({ onNavigate }) => {
                     ORBIT RADIUS: {zoomedTheme?.orbitRadius} PX
                   </span>
                 </div>
-                <h2 className="title-editorial text-3xl sm:text-5xl text-slate-100 font-black mt-3">
+                <h2 className="title-editorial text-3xl sm:text-5xl text-[#F8FAFC] font-black mt-3">
                   {zoomedSegment.segment_name}
                 </h2>
-                <p className="text-sm sm:text-base text-slate-400 font-light max-w-2xl mt-2 leading-relaxed">
+                <p className="text-sm sm:text-base text-[#CBD5E1] font-light max-w-2xl mt-2 leading-relaxed">
                   {zoomedSegment.description}
                 </p>
               </div>
 
               <div className="flex flex-col items-start md:items-end font-mono text-xs text-slate-400 space-y-1">
-                <span>VIEWER POPULATION: <strong className="text-slate-100">{zoomedSegment.profile.count.toLocaleString()}</strong></span>
+                <span>VIEWER POPULATION: <strong className="text-[#F8FAFC]">{zoomedSegment.profile.count.toLocaleString()}</strong></span>
                 <span>AUDIENCE SHARE: <strong className="text-sky-300">{zoomedSegment.profile.percentage}%</strong></span>
                 <span>SYSTEM STATUS: <strong className="text-sky-400">STABLE EQUILIBRIUM</strong></span>
               </div>
@@ -373,8 +373,8 @@ export const SegmentsPage: React.FC<SegmentsPageProps> = ({ onNavigate }) => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="label-telemetry">CATALOG TRAJECTORIES</span>
-                <h3 className="text-xl font-bold text-slate-100 font-sans">
+                <span className="label-telemetry text-sky-400">CATALOG TRAJECTORIES</span>
+                <h3 className="text-xl font-bold text-[#F8FAFC] font-sans">
                   Pre-Computed Recommendations for System 0{zoomedSegment.segment_id}
                 </h3>
               </div>
@@ -393,7 +393,7 @@ export const SegmentsPage: React.FC<SegmentsPageProps> = ({ onNavigate }) => {
                     <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/10 text-sky-400 text-xs font-bold">
                       TRJ-0{idx + 1}
                     </span>
-                    <span className="text-base font-bold text-slate-100 font-sans">{title}</span>
+                    <span className="text-base font-bold text-[#F8FAFC] font-sans">{title}</span>
                   </div>
                   <span className="text-xs text-slate-400">CORE CENTROID MATCH</span>
                 </div>
@@ -404,8 +404,8 @@ export const SegmentsPage: React.FC<SegmentsPageProps> = ({ onNavigate }) => {
           {/* Quick Simulate Trigger */}
           <div className="p-8 rounded-3xl bg-[#060A14]/60 border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <h4 className="text-base font-bold text-slate-100">Simulate a viewer inside this cluster?</h4>
-              <p className="text-xs text-slate-400 font-light mt-1">
+              <h4 className="text-base font-bold text-[#F8FAFC]">Simulate a viewer inside this cluster?</h4>
+              <p className="text-xs text-[#CBD5E1] font-light mt-1">
                 Test how the real-time API handles inputs matching this behavioral profile.
               </p>
             </div>

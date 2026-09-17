@@ -28,10 +28,10 @@ export const SystemStatusPage: React.FC<SystemStatusPageProps> = ({
               SYSTEM STATUS // REAL-TIME MICROSERVICE PROBE
             </span>
           </div>
-          <h1 className="title-editorial text-4xl sm:text-6xl text-slate-100 font-black">
+          <h1 className="title-editorial text-4xl sm:text-6xl text-[#F8FAFC] font-black">
             SYSTEM TELEMETRY
           </h1>
-          <p className="mt-2 text-sm text-slate-400 font-light">
+          <p className="mt-2 text-sm text-[#CBD5E1] font-light">
             Direct diagnostic readouts from the containerized FastAPI GET /health endpoint.
           </p>
         </div>
@@ -54,12 +54,12 @@ export const SystemStatusPage: React.FC<SystemStatusPageProps> = ({
                 isConnected && health?.model_loaded ? 'bg-sky-400 shadow-[0_0_10px_#38BDF8]' : 'bg-rose-500'
               }`}
             />
-            <span className="text-sm font-bold text-slate-100 uppercase tracking-wider">
+            <span className="text-sm font-bold text-[#F8FAFC] uppercase tracking-wider">
               {isConnected && health?.model_loaded ? 'PIPELINE ACTIVE // NOMINAL' : 'PIPELINE OFFLINE / UNREACHABLE'}
             </span>
           </div>
-          <span className="text-xs text-slate-500">
-            PING: <strong className="text-slate-200">{latency} ms</strong>
+          <span className="text-xs text-slate-400">
+            PING: <strong className="text-[#F8FAFC]">{latency} ms</strong>
           </span>
         </div>
 
@@ -70,8 +70,12 @@ export const SystemStatusPage: React.FC<SystemStatusPageProps> = ({
             <span className="text-xs text-slate-400 uppercase tracking-widest">API ENDPOINT</span>
             <div className="flex items-center space-x-2">
               <span className="text-xs text-slate-100 font-bold">{baseUrl}</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-400/10 text-sky-300 border border-sky-400/30">
-                HTTP 200 OK
+              <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                isConnected && health?.status === 'ok'
+                  ? 'bg-sky-400/10 text-sky-300 border border-sky-400/30'
+                  : 'bg-rose-500/10 text-rose-300 border border-rose-500/30'
+              }`}>
+                {isConnected && health?.status === 'ok' ? 'HTTP 200 OK' : 'SERVICE OFFLINE'}
               </span>
             </div>
           </div>

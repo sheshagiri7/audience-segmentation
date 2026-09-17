@@ -45,6 +45,10 @@ def run_training_pipeline(
     # 1. Ingestion
     logger.info("Step 1/6: Ingesting dataset...")
     df_raw, source_path = get_or_create_dataset(data_path)
+    if df_raw is None or len(df_raw) == 0:
+        raise ValueError("Dataset is empty. Cannot proceed with model training.")
+    if len(df_raw) < target_k:
+        raise ValueError(f"Dataset contains {len(df_raw)} records, fewer than K={target_k} required for clustering.")
     logger.info(f"Loaded {len(df_raw)} raw records from: {source_path}")
 
     # 2. Data Cleaning & Quality Assurance
@@ -155,9 +159,13 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    run_training_pipeline(
-        data_path=args.data_path,
-        output_dir=args.output_dir,
-        target_k=args.k,
-        random_seed=args.seed
-    )
+    try:
+        run_training_pipeline(
+            data_path=args.data_path,
+            output_dir=args.output_dir,
+            target_k=args.k,
+            random_seed=args.seed
+        )
+    except Exception as e:
+        logger.error(f"Training pipeline execution failed: {e}")
+        sys.exit(1)
