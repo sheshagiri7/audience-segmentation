@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: #03060C;
+    color: #E2E8F0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    selection-background-color: #38BDF8;
+    selection-color: #03060C;
+  }
+
+  /* Minimal observatory scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #03060C;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #111D35;
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #38BDF8;
+  }
+}
+
+@layer utilities {
+  /* Precision telemetry grid */
+  .telemetry-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  }
+
+  /* Editorial typography */
+  .title-editorial {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .label-telemetry {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #94A3B8;
+  }
+
+  .num-oversized {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  /* Observatory measurement lines */
+  .measuring-line-x {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.12) 80%, transparent 100%);
+  }
+
+  .measuring-line-y {
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.12) 20%, rgba(255, 255, 255, 0.12) 80%, transparent 100%);
+  }
+
+  /* Orbital track outline */
+  .orbit-ring {
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+  }
+
+  /* Clean instrument panel - disciplined and minimal */
+  .instrument-panel {
+    background: rgba(7, 12, 24, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .instrument-panel-accent {
+    background: rgba(10, 17, 36, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+  }
+
+  /* Backward compatible aliases */
+  .glass-panel {
+    background: rgba(7, 12, 24, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card {
+    background: rgba(10, 17, 36, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .glass-card-hover {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    background: rgba(15, 24, 46, 0.85);
+    border-color: rgba(56, 189, 248, 0.3);
+  }
+}

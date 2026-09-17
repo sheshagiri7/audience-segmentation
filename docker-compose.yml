@@ -1,0 +1,55 @@
+services:
+  trainer:
+    build:
+      context: .
+      dockerfile: trainer/Dockerfile
+    volumes:
+      - model_data:/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: "no"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - model_data:/models:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODEL_DIR=/models
+    depends_on:
+      trainer:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f http://localhost:8000/health | grep -q '\"status\":\"ok\"' || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 4s
+    restart: on-failure
+
+  evaluator:
+    build:
+      context: .
+      dockerfile: evaluator/Dockerfile
+    volumes:
+      - model_data:/models:rw
+      - .:/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      - API_BASE_URL=http://api:8000
+      - MODEL_DIR=/models
+      - DATA_PATH=/app/data/user_activity.csv
+      - OUTPUT_DIR=/output
+    depends_on:
+      api:
+        condition: service_healthy
+    command: ["python", "-m", "evaluator.evaluate", "--api-url", "http://api:8000", "--model-dir", "/models", "--data-path", "/app/data/user_activity.csv", "--output-dir", "/output"]
+    restart: "no"
+
+volumes:
+  model_data:
+    name: audience_segmentation_models

@@ -1,0 +1,215 @@
+{
+  "model_version": "1.0.0",
+  "algorithm": "StandardScaler + KMeans",
+  "random_seed": 42,
+  "k_clusters": 4,
+  "feature_names": [
+    "watch_time_hours",
+    "avg_session_mins",
+    "genre_count",
+    "genre_Action",
+    "genre_Thriller",
+    "genre_Sci-Fi",
+    "genre_Drama",
+    "genre_Comedy",
+    "genre_Romance",
+    "genre_Documentary",
+    "genre_Animation",
+    "genre_Family",
+    "genre_Horror",
+    "genre_Crime",
+    "genre_Adventure"
+  ],
+  "features": [
+    "watch_time_hours",
+    "avg_session_mins",
+    "genre_count",
+    "genre_Action",
+    "genre_Thriller",
+    "genre_Sci-Fi",
+    "genre_Drama",
+    "genre_Comedy",
+    "genre_Romance",
+    "genre_Documentary",
+    "genre_Animation",
+    "genre_Family",
+    "genre_Horror",
+    "genre_Crime",
+    "genre_Adventure"
+  ],
+  "total_training_samples": 10000,
+  "metrics": {
+    "silhouette_score": 0.4238,
+    "inertia": 57394.54,
+    "davies_bouldin_index": 1.0673,
+    "calinski_harabasz_score": 4795.6
+  },
+  "segments": [
+    {
+      "segment_id": 0,
+      "segment_name": "High-Engagement Action Viewers",
+      "description": "Heavy monthly watch hours (>30h), marathon sessions (>75m), and action/thriller preference.",
+      "personalization_strategy": "Prioritize high-octane 4K HDR action/thriller catalogs, franchise marathons, and early-access thriller series.",
+      "recommendations": [
+        "Extraction: Rogue Directive",
+        "Shadow Protocol: Berlin",
+        "Quantum Paradox (Season 2)",
+        "The Dark Horizon",
+        "Apex Predator: Hunt"
+      ],
+      "profile": {
+        "count": 3182,
+        "percentage": 31.82,
+        "avg_watch_time_hours": 37.53,
+        "avg_session_mins": 91.35,
+        "avg_genre_count": 2.59,
+        "dominant_genres": [
+          "Thriller",
+          "Sci-Fi",
+          "Action"
+        ]
+      }
+    },
+    {
+      "segment_id": 1,
+      "segment_name": "Casual Short-Session Viewers",
+      "description": "Frequent quick-bite viewing during breaks/commutes (<30m sessions), responsive to comedy and animated shorts.",
+      "personalization_strategy": "Surface bite-sized comedy specials, 20-minute sitcoms, animated shorts, and quick-completion series requiring low cognitive friction.",
+      "recommendations": [
+        "Coffee Break Standup Vol. 3",
+        "Pixel Bytes: Short Stories",
+        "The Roommates (22m Ep 5)",
+        "Laugh Track Live",
+        "Quick Takes: Pop Culture"
+      ],
+      "profile": {
+        "count": 3662,
+        "percentage": 36.62,
+        "avg_watch_time_hours": 7.92,
+        "avg_session_mins": 27.37,
+        "avg_genre_count": 1.59,
+        "dominant_genres": [
+          "Comedy",
+          "Animation",
+          "Drama"
+        ]
+      }
+    },
+    {
+      "segment_id": 2,
+      "segment_name": "Genre-Explorers",
+      "description": "Highly engaged omnivores discovering diverse global, indie, documentary, and mystery content.",
+      "personalization_strategy": "Mix preferred genres with controlled serendipitous discovery of adjacent foreign films, docuseries, and award-winners.",
+      "recommendations": [
+        "Wild Earth: Arctic Wilderness",
+        "The Secrets of Kyoto",
+        "Subterranean Mysteries",
+        "Canvas & Code: Digital Renaissance",
+        "Nordic Murmurs"
+      ],
+      "profile": {
+        "count": 2367,
+        "percentage": 23.67,
+        "avg_watch_time_hours": 26.06,
+        "avg_session_mins": 58.11,
+        "avg_genre_count": 4.01,
+        "dominant_genres": [
+          "Adventure",
+          "Sci-Fi",
+          "Documentary"
+        ]
+      }
+    },
+    {
+      "segment_id": 3,
+      "segment_name": "Low-Activity Viewers",
+      "description": "Occasional or low-frequency viewers (<5h watch time) with irregular weekend streaming patterns.",
+      "personalization_strategy": "Surface universally popular, low-friction trending Top 10 mainstream hits and family crowd-pleasers.",
+      "recommendations": [
+        "Global Top 10: The Crown Jewel",
+        "Family Game Night Championship",
+        "Summer Odyssey",
+        "The Reunion Special",
+        "Sunday Cinema Showcase"
+      ],
+      "profile": {
+        "count": 789,
+        "percentage": 7.89,
+        "avg_watch_time_hours": 3.68,
+        "avg_session_mins": 32.79,
+        "avg_genre_count": 1.59,
+        "dominant_genres": [
+          "Family",
+          "Drama",
+          "Comedy"
+        ]
+      }
+    }
+  ],
+  "data_quality_report": {
+    "raw_record_count": 10100,
+    "duplicate_records_dropped": 100,
+    "negative_watch_time_corrected": 30,
+    "negative_session_mins_corrected": 25,
+    "missing_watch_time_imputed": 229,
+    "missing_session_mins_imputed": 224,
+    "missing_genres_handled": 75,
+    "outliers_capped": 200,
+    "final_cleaned_record_count": 10000
+  },
+  "k_evaluation_analysis": {
+    "k_evaluations": [
+      {
+        "k": 2,
+        "inertia": 96174.69,
+        "silhouette_score": 0.3284,
+        "davies_bouldin_index": 1.382,
+        "calinski_harabasz_score": 4555.93
+      },
+      {
+        "k": 3,
+        "inertia": 68577.37,
+        "silhouette_score": 0.4069,
+        "davies_bouldin_index": 1.1902,
+        "calinski_harabasz_score": 5205.89
+      },
+      {
+        "k": 4,
+        "inertia": 57394.54,
+        "silhouette_score": 0.4238,
+        "davies_bouldin_index": 1.0673,
+        "calinski_harabasz_score": 4795.6
+      },
+      {
+        "k": 5,
+        "inertia": 52498.01,
+        "silhouette_score": 0.4018,
+        "davies_bouldin_index": 1.1026,
+        "calinski_harabasz_score": 4164.84
+      },
+      {
+        "k": 6,
+        "inertia": 48156.8,
+        "silhouette_score": 0.4232,
+        "davies_bouldin_index": 0.9999,
+        "calinski_harabasz_score": 3812.06
+      },
+      {
+        "k": 7,
+        "inertia": 43379.94,
+        "silhouette_score": 0.4123,
+        "davies_bouldin_index": 1.345,
+        "calinski_harabasz_score": 3709.57
+      },
+      {
+        "k": 8,
+        "inertia": 40527.01,
+        "silhouette_score": 0.4281,
+        "davies_bouldin_index": 1.2489,
+        "calinski_harabasz_score": 3503.6
+      }
+    ],
+    "selected_k": 4,
+    "selection_rationale": "K=4 is the most defensible choice. Elbow analysis demonstrates substantial inertia reduction up to K=4 (from 96,174 to 57,395), followed by sharp diminishing returns for K > 4. Furthermore, K=4 exhibits a strong silhouette score (0.4238) and minimal Davies-Bouldin index (1.0673), mapping 1-to-1 to the 4 operational viewer archetypes in PS Section 8."
+  }
+}

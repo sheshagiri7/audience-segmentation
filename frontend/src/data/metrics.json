@@ -1,0 +1,327 @@
+{
+  "silhouette_score": 0.4112,
+  "inertia": 57394.54,
+  "davies_bouldin_index": 1.0926,
+  "calinski_harabasz_score": 2544.95,
+  "k_clusters": 4,
+  "cluster_sizes": [
+    {
+      "segment_id": 0,
+      "segment_name": "High-Engagement Action Viewers",
+      "count": 3192,
+      "percentage": 31.92
+    },
+    {
+      "segment_id": 1,
+      "segment_name": "Casual Short-Session Viewers",
+      "count": 3658,
+      "percentage": 36.58
+    },
+    {
+      "segment_id": 2,
+      "segment_name": "Genre-Explorers",
+      "count": 2364,
+      "percentage": 23.64
+    },
+    {
+      "segment_id": 3,
+      "segment_name": "Low-Activity Viewers",
+      "count": 786,
+      "percentage": 7.86
+    }
+  ],
+  "cluster_balance": {
+    "is_balanced": true,
+    "min_percentage": 7.86,
+    "max_percentage": 36.58,
+    "balance_ratio": 4.65
+  },
+  "stability_test": {
+    "reproducibility": "Deterministic",
+    "seed_used": 42,
+    "silhouette_variance": 0.0,
+    "repeated_inference_variance": 0.0
+  },
+  "api_tests": {
+    "total_tests": 15,
+    "passed": 15,
+    "failed": 0,
+    "test_cases": [
+      {
+        "case_name": "1. API Health Check (/health)",
+        "description": "Verify container readiness, model_loaded status, and healthy response",
+        "input_sample": {},
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 3.55,
+        "passed": true,
+        "notes": "Confirms Docker healthcheck readiness",
+        "error": null
+      },
+      {
+        "case_name": "2. Representative: High-Engagement Action Viewer",
+        "description": "USR-8192 profile with 32.5h watch time, 85m session, Action/Thriller genres",
+        "input_sample": {
+          "user_id": "USR-8192",
+          "watch_time_hours": 32.5,
+          "top_genres": [
+            "Action",
+            "Thriller"
+          ],
+          "avg_session_mins": 85.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 6.38,
+        "passed": true,
+        "notes": "Expects High-Engagement Action Viewers segment with action/thriller recommendations",
+        "error": null
+      },
+      {
+        "case_name": "3. Representative: Casual Short-Session Viewer",
+        "description": "USR-2001 profile with 7.5h watch time, 25m session, Comedy/Animation genres",
+        "input_sample": {
+          "user_id": "USR-2001",
+          "watch_time_hours": 7.5,
+          "top_genres": [
+            "Comedy",
+            "Animation"
+          ],
+          "avg_session_mins": 25.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 6.26,
+        "passed": true,
+        "notes": "Expects Casual Short-Session Viewers segment with quick-bite comedy recommendations",
+        "error": null
+      },
+      {
+        "case_name": "4. Representative: Genre-Explorer",
+        "description": "USR-3001 profile with 26h watch time, 60m session, diverse genres",
+        "input_sample": {
+          "user_id": "USR-3001",
+          "watch_time_hours": 26.0,
+          "top_genres": [
+            "Adventure",
+            "Sci-Fi",
+            "Documentary"
+          ],
+          "avg_session_mins": 60.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 6.22,
+        "passed": true,
+        "notes": "Expects Genre-Explorers segment with eclectic recommendations",
+        "error": null
+      },
+      {
+        "case_name": "5. Representative: Low-Activity Viewer",
+        "description": "USR-4001 profile with 2.5h watch time, 20m session, Family genre",
+        "input_sample": {
+          "user_id": "USR-4001",
+          "watch_time_hours": 2.5,
+          "top_genres": [
+            "Family"
+          ],
+          "avg_session_mins": 20.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 7.15,
+        "passed": true,
+        "notes": "Expects Low-Activity Viewers segment with low-friction mainstream content",
+        "error": null
+      },
+      {
+        "case_name": "6. Edge: Unknown / Unseen Genre Value",
+        "description": "Genres outside canonical catalog (Experimental Indie Noir, Obscure Avant-Garde)",
+        "input_sample": {
+          "user_id": "USR-EDGE-01",
+          "watch_time_hours": 15.0,
+          "top_genres": [
+            "Experimental Indie Noir",
+            "Obscure Avant-Garde"
+          ],
+          "avg_session_mins": 45.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 6.69,
+        "passed": true,
+        "notes": "Must handle novel genres gracefully without KeyError or 500 error",
+        "error": null
+      },
+      {
+        "case_name": "7. Edge: Empty top_genres List",
+        "description": "User profile with empty genre array []",
+        "input_sample": {
+          "user_id": "USR-EDGE-02",
+          "watch_time_hours": 20.0,
+          "top_genres": [],
+          "avg_session_mins": 50.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 3.69,
+        "passed": true,
+        "notes": "Must cluster based on engagement & session metrics without failing",
+        "error": null
+      },
+      {
+        "case_name": "8. Edge: Zero Watch Time (Cold Start)",
+        "description": "New account with 0.0 hours watch time and 0.0 mins session",
+        "input_sample": {
+          "user_id": "USR-EDGE-03",
+          "watch_time_hours": 0.0,
+          "top_genres": [
+            "Comedy"
+          ],
+          "avg_session_mins": 0.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 3.05,
+        "passed": true,
+        "notes": "Must assign low-activity cluster without division-by-zero",
+        "error": null
+      },
+      {
+        "case_name": "9. Edge: Extreme Watch Time / Session Duration",
+        "description": "Extreme binge viewer with 500h watch time and 360m session",
+        "input_sample": {
+          "user_id": "USR-EDGE-04",
+          "watch_time_hours": 500.0,
+          "top_genres": [
+            "Action",
+            "Sci-Fi"
+          ],
+          "avg_session_mins": 360.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 6.99,
+        "passed": true,
+        "notes": "StandardScaler must handle extreme outliers without overflow",
+        "error": null
+      },
+      {
+        "case_name": "10. Edge: Missing Required Field",
+        "description": "Payload missing mandatory watch_time_hours field",
+        "input_sample": {
+          "user_id": "USR-EDGE-05",
+          "top_genres": [
+            "Drama"
+          ],
+          "avg_session_mins": 40.0
+        },
+        "expected_status": 422,
+        "actual_status": 422,
+        "latency_ms": 2.06,
+        "passed": true,
+        "notes": "Pydantic validation rejects with HTTP 422 and clean error message",
+        "error": null
+      },
+      {
+        "case_name": "11. Edge: String for Numeric Value",
+        "description": "String 'twenty' passed in watch_time_hours",
+        "input_sample": {
+          "user_id": "USR-EDGE-06",
+          "watch_time_hours": "twenty",
+          "top_genres": [
+            "Drama"
+          ],
+          "avg_session_mins": 40.0
+        },
+        "expected_status": 422,
+        "actual_status": 422,
+        "latency_ms": 3.55,
+        "passed": true,
+        "notes": "Type validator rejects non-numeric input cleanly",
+        "error": null
+      },
+      {
+        "case_name": "12. Edge: Negative Watch Time",
+        "description": "Negative watch time (-15.5 hours)",
+        "input_sample": {
+          "user_id": "USR-EDGE-07",
+          "watch_time_hours": -15.5,
+          "top_genres": [
+            "Action"
+          ],
+          "avg_session_mins": 45.0
+        },
+        "expected_status": 422,
+        "actual_status": 422,
+        "latency_ms": 2.9,
+        "passed": true,
+        "notes": "Field validator rejects negative engagement quantities",
+        "error": null
+      },
+      {
+        "case_name": "13. Edge: Repeated API Requests (Determinism)",
+        "description": "Verify identical responses across 5 consecutive requests with fixed profile",
+        "input_sample": {
+          "user_id": "USR-8192-DET",
+          "watch_time_hours": 32.5,
+          "top_genres": [
+            "Action",
+            "Thriller"
+          ],
+          "avg_session_mins": 85.0
+        },
+        "expected_status": 200,
+        "actual_status": 200,
+        "latency_ms": 3.71,
+        "passed": true,
+        "notes": "Zero variance in segment assignment and centroid distance",
+        "error": null
+      },
+      {
+        "case_name": "14. Edge: Whitespace User ID",
+        "description": "User ID containing only whitespace '   '",
+        "input_sample": {
+          "user_id": "   ",
+          "watch_time_hours": 10.0,
+          "top_genres": [
+            "Action"
+          ],
+          "avg_session_mins": 45.0
+        },
+        "expected_status": 422,
+        "actual_status": 422,
+        "latency_ms": 1.14,
+        "passed": true,
+        "notes": "Validator rejects empty or whitespace-only user ID",
+        "error": null
+      },
+      {
+        "case_name": "15. Edge: Malformed JSON Syntax",
+        "description": "Corrupted JSON payload body '{user_id: malformed'",
+        "input_sample": {},
+        "expected_status": 422,
+        "actual_status": 422,
+        "latency_ms": 1.25,
+        "passed": true,
+        "notes": "FastAPI/Starlette request validation catches malformed syntax with HTTP 422",
+        "error": null
+      }
+    ]
+  },
+  "latency_stats": {
+    "avg_latency_ms": 4.35,
+    "p95_latency_ms": 7.05,
+    "min_latency_ms": 1.14,
+    "max_latency_ms": 7.15
+  },
+  "api_health_status": {
+    "status": "ok",
+    "model_loaded": true,
+    "version": "1.0.0",
+    "uptime_seconds": 33.72,
+    "model_type": "Pipeline (scaler -> kmeans)",
+    "features_count": 15
+  },
+  "evaluated_at": "2026-09-17T13:23:36Z"
+}
