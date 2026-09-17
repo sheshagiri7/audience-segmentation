@@ -189,15 +189,16 @@ The unsupervised pipeline utilizes `sklearn.preprocessing.StandardScaler` couple
 - `random_state`: $42$ (enforces strict determinism across container builds)
 
 ### 7.3 Unified Pipeline Persistence & Zero Retraining Guarantee
-The scaler and estimator are combined inside a single `sklearn.pipeline.Pipeline`:
+In strict conformance with the Problem Statement requirement (*"Save preprocessing and model together so inference uses exactly the same transformations as training"*), the custom deterministic feature transformer (`ViewerFeatureExtractor`), scaler (`StandardScaler`), and clustering estimator (`KMeans`) are unified into a single persisted `sklearn.pipeline.Pipeline`:
 ```python
 pipeline = Pipeline([
+    ("extractor", ViewerFeatureExtractor()),
     ("scaler", StandardScaler()),
     ("kmeans", KMeans(n_clusters=4, random_state=42, n_init=10, max_iter=300))
 ])
 ```
 The pipeline is serialized to `/models/pipeline.joblib` via `joblib.dump()`.
-During runtime inference, the API loads this artifact into memory once at startup. Incoming JSON payloads are transformed and scored via `pipeline.predict()` and `kmeans.transform()`. No retraining, gradient updates, or centroid adjustments occur during request handling.
+During runtime inference, the API loads this artifact into memory once at startup. Incoming raw viewer-profile records are ingested directly into `pipeline.predict()`, guaranteeing that inference uses the exact same feature transformation, genre encoding, and scaling as training. No retraining, gradient updates, or centroid adjustments occur during request handling.
 
 ---
 

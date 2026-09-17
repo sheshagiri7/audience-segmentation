@@ -164,52 +164,72 @@
         "inertia": 96174.69,
         "silhouette_score": 0.3284,
         "davies_bouldin_index": 1.382,
-        "calinski_harabasz_score": 4555.93
+        "calinski_harabasz_score": 4555.93,
+        "min_cluster_pct": 44.48,
+        "composite_score": 0.5168
       },
       {
         "k": 3,
         "inertia": 68577.37,
         "silhouette_score": 0.4069,
         "davies_bouldin_index": 1.1902,
-        "calinski_harabasz_score": 5205.89
+        "calinski_harabasz_score": 5205.89,
+        "min_cluster_pct": 23.67,
+        "composite_score": 0.784
       },
       {
         "k": 4,
         "inertia": 57394.54,
         "silhouette_score": 0.4238,
         "davies_bouldin_index": 1.0673,
-        "calinski_harabasz_score": 4795.6
+        "calinski_harabasz_score": 4795.6,
+        "min_cluster_pct": 7.89,
+        "composite_score": 0.905
       },
       {
         "k": 5,
         "inertia": 52498.01,
         "silhouette_score": 0.4018,
         "davies_bouldin_index": 1.1026,
-        "calinski_harabasz_score": 4164.84
+        "calinski_harabasz_score": 4164.84,
+        "min_cluster_pct": 7.87,
+        "composite_score": 0.8659
       },
       {
         "k": 6,
         "inertia": 48156.8,
         "silhouette_score": 0.4232,
         "davies_bouldin_index": 0.9999,
-        "calinski_harabasz_score": 3812.06
+        "calinski_harabasz_score": 3812.06,
+        "min_cluster_pct": 6.47,
+        "composite_score": 0.8211
       },
       {
         "k": 7,
         "inertia": 43379.94,
         "silhouette_score": 0.4123,
         "davies_bouldin_index": 1.345,
-        "calinski_harabasz_score": 3709.57
+        "calinski_harabasz_score": 3709.57,
+        "min_cluster_pct": 6.18,
+        "composite_score": 0.8359
       },
       {
         "k": 8,
         "inertia": 40527.01,
         "silhouette_score": 0.4281,
         "davies_bouldin_index": 1.2489,
-        "calinski_harabasz_score": 3503.6
+        "calinski_harabasz_score": 3503.6,
+        "min_cluster_pct": 5.67,
+        "composite_score": 0.8645
       }
     ],
     "selected_k": 4,
-    "selection_rationale": "K=4 is the most defensible choice. Elbow analysis demonstrates substantial inertia reduction up to K=4 (from 96,174 to 57,395), followed by sharp diminishing returns for K > 4. Furthermore, K=4 exhibits a strong silhouette score (0.4238) and minimal Davies-Bouldin index (1.0673), mapping 1-to-1 to the 4 operational viewer archetypes in PS Section 8."
+    "selection_rationale": "K=4 was selected via multi-criteria evaluation (composite score: 0.9050). While K=8 achieves the peak raw silhouette (0.4281), K=8 suffers from severe diminishing inertia returns and creates fragmented micro-cohorts (<6% share). K=4 captures 57394.54 inertia at the elbow curvature (69.7% of total potential reduction), maintains strong silhouette separation (0.4238), preserves viable cohort balance (min 7.9% share), and provides direct 1-to-1 operational alignment with the 4 viewer engagement archetypes defined in Problem Statement Section 8.",
+    "multi_criteria_weights": {
+      "silhouette_competitiveness": 0.4,
+      "elbow_inertia_reduction": 0.3,
+      "archetype_alignment": 0.3,
+      "balance_threshold_pct": 7.0
+    }
   }
 }

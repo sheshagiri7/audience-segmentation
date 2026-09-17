@@ -8,6 +8,7 @@ from common.preprocessing import (
     FEATURE_COLUMNS,
     extract_features_df,
     extract_features_from_raw,
+    ViewerFeatureExtractor,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "FEATURE_COLUMNS",
     "extract_features_df",
     "extract_features_from_raw",
+    "ViewerFeatureExtractor",
 ]

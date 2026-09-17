@@ -115,26 +115,15 @@ def run_training_pipeline(
         saved_locations.append(str(t_dir.resolve()))
 
     # 7. Self-Verification Smoke Test
-    logger.info("Running post-training self-verification test...")
-    test_profile = pd.DataFrame([{
+    logger.info("Running post-training self-verification test (raw profile -> pipeline)...")
+    raw_test_profile = pd.DataFrame([{
+        "user_id": "USR-8192",
         "watch_time_hours": 32.5,
         "avg_session_mins": 85.0,
-        "genre_count": 2.0,
-        "genre_Action": 1.0,
-        "genre_Thriller": 1.0,
-        "genre_Sci-Fi": 0.0,
-        "genre_Drama": 0.0,
-        "genre_Comedy": 0.0,
-        "genre_Romance": 0.0,
-        "genre_Documentary": 0.0,
-        "genre_Animation": 0.0,
-        "genre_Family": 0.0,
-        "genre_Horror": 0.0,
-        "genre_Crime": 0.0,
-        "genre_Adventure": 0.0,
-    }])[FEATURE_COLUMNS]
+        "top_genres": ["Action", "Thriller"],
+    }])
 
-    pred_cluster = int(pipeline.predict(test_profile)[0])
+    pred_cluster = int(pipeline.predict(raw_test_profile)[0])
     seg_name = metadata["segments"][pred_cluster]["segment_name"]
     logger.info(f"Self-test prediction: USR-8192 sample -> Segment {pred_cluster} ('{seg_name}')")
 

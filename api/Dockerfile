@@ -17,11 +17,12 @@ WORKDIR /app
 RUN groupadd -r appgroup && useradd -r -g appgroup -u 1001 -d /app -s /sbin/nologin appuser
 
 # Install dependencies first for Docker layer caching
-COPY requirements.txt /app/requirements.txt
+COPY api/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy application source code
-COPY . /app/api
+# Copy application source code and common library
+COPY api/ /app/api/
+COPY common/ /app/common/
 
 # Ensure /models mount directory exists and permissions are set
 RUN mkdir -p /models && chown -R appuser:appgroup /app /models

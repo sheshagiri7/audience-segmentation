@@ -78,6 +78,7 @@ class ModelManager:
         self.segments: Dict[int, Dict[str, Any]] = DEFAULT_SEGMENTS.copy()
         self.model_loaded: bool = False
         self.model_type: Optional[str] = None
+        self.extractor: Any = None
         self.scaler: Any = None
         self.kmeans: Any = None
 
@@ -176,6 +177,7 @@ class ModelManager:
     def _unpack_pipeline(self, obj: Any) -> None:
         """Inspects and extracts pipeline steps and feature schema."""
         self.pipeline = obj
+        self.extractor = None
         self.scaler = None
         self.kmeans = None
         self.model_type = type(obj).__name__
@@ -186,6 +188,8 @@ class ModelManager:
             for name, step in obj.named_steps.items():
                 lower_name = name.lower()
                 step_type = type(step).__name__.lower()
+                if "extractor" in lower_name or "extractor" in step_type:
+                    self.extractor = step
                 if "scale" in lower_name or "scaler" in step_type:
                     self.scaler = step
                 if "kmeans" in lower_name or "cluster" in lower_name or "kmeans" in step_type:
@@ -196,6 +200,12 @@ class ModelManager:
                 self.feature_names = list(obj.feature_names_in_)
             elif self.scaler and hasattr(self.scaler, "feature_names_in_"):
                 self.feature_names = list(self.scaler.feature_names_in_)
+            elif not self.feature_names:
+                try:
+                    from common.preprocessing import FEATURE_COLUMNS
+                    self.feature_names = list(FEATURE_COLUMNS)
+                except Exception:
+                    pass
 
         # Tuple or Dict of (scaler, kmeans)
         elif isinstance(obj, (tuple, list)) and len(obj) == 2:

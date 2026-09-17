@@ -17,6 +17,7 @@ import logging
 from typing import Tuple, Dict, Any, List
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 
 logger = logging.getLogger("audience.preprocessing")
 
@@ -177,7 +178,7 @@ def extract_features_df(df_cleaned: pd.DataFrame) -> pd.DataFrame:
 
     for i, g_list in enumerate(genres_series):
         if not isinstance(g_list, list):
-            g_list = []
+            g_list = parse_genre_field(g_list)
         user_genres_lower = {str(x).strip().lower() for x in g_list if x and str(x).strip()}
         genre_counts.append(float(len(user_genres_lower)))
 
@@ -190,6 +191,41 @@ def extract_features_df(df_cleaned: pd.DataFrame) -> pd.DataFrame:
 
     X_df = pd.DataFrame(features_dict)[FEATURE_COLUMNS]
     return X_df
+
+
+class ViewerFeatureExtractor(BaseEstimator, TransformerMixin):
+    """
+    Deterministic feature transformer embedded in the persisted scikit-learn Pipeline.
+    Directly satisfies Problem Statement Section 4 & 7:
+    'Save preprocessing and model together so inference uses exactly the same transformations as training.'
+
+    Transforms raw viewer profile inputs (DataFrame, dict, or list of dicts)
+    into the canonical 15-dimensional numeric feature matrix:
+    [watch_time_hours, avg_session_mins, genre_count, genre_Action, ..., genre_Adventure]
+    """
+    def __init__(self, canonical_genres: Any = None):
+        self.canonical_genres = canonical_genres or list(CANONICAL_GENRES)
+
+    def fit(self, X, y=None):
+        # Deterministic feature extraction has no learned statistical state during fit
+        return self
+
+    def transform(self, X):
+        # 1. Handle already-extracted feature matrix (DataFrame with FEATURE_COLUMNS)
+        if isinstance(X, pd.DataFrame):
+            if all(col in X.columns for col in FEATURE_COLUMNS):
+                return X[FEATURE_COLUMNS]
+            return extract_features_df(X)
+        elif isinstance(X, np.ndarray):
+            if X.ndim == 2 and X.shape[1] == len(FEATURE_COLUMNS):
+                return pd.DataFrame(X, columns=FEATURE_COLUMNS)
+            raise ValueError(f"Expected 2D array with {len(FEATURE_COLUMNS)} columns, got shape {X.shape}")
+        elif isinstance(X, dict):
+            return extract_features_df(pd.DataFrame([X]))
+        elif isinstance(X, list):
+            return extract_features_df(pd.DataFrame(X))
+        else:
+            raise TypeError(f"Unsupported input type for ViewerFeatureExtractor: {type(X)}")
 
 
 def extract_features_from_raw(df_raw: pd.DataFrame) -> pd.DataFrame:

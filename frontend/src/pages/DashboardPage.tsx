@@ -383,7 +383,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               0{metadata.k_clusters}
             </div>
             <p className="text-xs text-[#94A3B8] font-light pt-1">
-              Autonomous KMeans partitions with optimal Davies-Bouldin separation.
+              KMeans partitions with verified cluster separation and balance.
             </p>
           </div>
 
@@ -393,7 +393,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               {metrics.silhouette_score.toFixed(4)}
             </div>
             <p className="text-xs text-[#94A3B8] font-light pt-1">
-              Measured silhouette score confirming non-overlapping cluster boundaries.
+              Measured silhouette score confirming distinct behavioral clusters.
             </p>
           </div>
 

@@ -63,57 +63,92 @@ def generate_recommendation(
         raise RuntimeError("Clustering pipeline is not loaded.")
 
     pipeline = model_mgr.pipeline
-    expected_features = model_mgr.feature_names
-    df_features = extract_features(profile, expected_features)
+    raw_profile_df = pd.DataFrame([{
+        "user_id": profile.user_id,
+        "watch_time_hours": profile.watch_time_hours,
+        "avg_session_mins": profile.avg_session_mins,
+        "top_genres": profile.top_genres,
+    }])
 
-    # 1. Predict cluster / segment_id
-    try:
-        segment_pred = pipeline.predict(df_features)
-        segment_id = int(segment_pred[0])
-    except Exception as e:
-        logger.error(f"Inference error during predict(): {e}")
-        # If pipeline expects numpy array without feature names
-        try:
-            segment_pred = pipeline.predict(df_features.to_numpy())
-            segment_id = int(segment_pred[0])
-        except Exception as e2:
-            logger.error(f"Inference retry failed: {e2}")
-            raise RuntimeError(f"Model inference failed: {e2}")
-
-    # 2. Calculate distance to cluster centroid
+    # 1. Predict cluster / segment_id via the persisted pipeline
+    has_extractor = hasattr(pipeline, "named_steps") and "extractor" in pipeline.named_steps
+    segment_id = 0
     distance_to_centroid = 0.0
-    try:
-        if model_mgr.kmeans is not None:
-            kmeans = model_mgr.kmeans
-            scaler = model_mgr.scaler
 
-            # Obtain scaled features
-            if scaler is not None:
-                try:
-                    X_scaled = scaler.transform(df_features)
-                except Exception:
-                    X_scaled = scaler.transform(df_features.to_numpy())
-            else:
-                X_scaled = df_features.to_numpy()
+    if has_extractor:
+        try:
+            # Direct inference from raw profile through the unified persisted pipeline:
+            # raw profile -> ViewerFeatureExtractor -> StandardScaler -> KMeans
+            segment_pred = pipeline.predict(raw_profile_df)
+            segment_id = int(segment_pred[0])
 
-            # If KMeans provides transform (distances to all centroids)
-            if hasattr(kmeans, "transform"):
+            # 2. Calculate distance to cluster centroid using pipeline steps
+            extractor = pipeline.named_steps["extractor"]
+            scaler = pipeline.named_steps.get("scaler")
+            kmeans = pipeline.named_steps.get("kmeans")
+
+            X_features = extractor.transform(raw_profile_df)
+            X_scaled = scaler.transform(X_features) if scaler is not None else X_features.to_numpy()
+
+            if kmeans is not None and hasattr(kmeans, "transform"):
                 distances = kmeans.transform(X_scaled)
                 if segment_id < distances.shape[1]:
                     distance_to_centroid = float(distances[0][segment_id])
                 else:
                     distance_to_centroid = float(distances[0][0])
-            elif hasattr(kmeans, "cluster_centers_"):
+            elif kmeans is not None and hasattr(kmeans, "cluster_centers_"):
                 centroid = kmeans.cluster_centers_[segment_id]
                 distance_to_centroid = float(np.linalg.norm(X_scaled[0] - centroid))
 
-        elif hasattr(pipeline, "transform"):
-            distances = pipeline.transform(df_features)
-            if segment_id < distances.shape[1]:
-                distance_to_centroid = float(distances[0][segment_id])
-    except Exception as dist_err:
-        logger.warning(f"Could not compute centroid distance: {dist_err}")
-        distance_to_centroid = 0.0
+        except Exception as e:
+            logger.error(f"Unified pipeline inference error: {e}")
+            raise RuntimeError(f"Model inference failed: {e}")
+
+    else:
+        # Fallback for 2-step pipeline or mock models without extractor step
+        expected_features = model_mgr.feature_names
+        df_features = extract_features(profile, expected_features)
+        try:
+            segment_pred = pipeline.predict(df_features)
+            segment_id = int(segment_pred[0])
+        except Exception as e:
+            logger.error(f"Inference error during predict(): {e}")
+            try:
+                segment_pred = pipeline.predict(df_features.to_numpy())
+                segment_id = int(segment_pred[0])
+            except Exception as e2:
+                logger.error(f"Inference retry failed: {e2}")
+                raise RuntimeError(f"Model inference failed: {e2}")
+
+        try:
+            if model_mgr.kmeans is not None:
+                kmeans = model_mgr.kmeans
+                scaler = model_mgr.scaler
+                if scaler is not None:
+                    try:
+                        X_scaled = scaler.transform(df_features)
+                    except Exception:
+                        X_scaled = scaler.transform(df_features.to_numpy())
+                else:
+                    X_scaled = df_features.to_numpy()
+
+                if hasattr(kmeans, "transform"):
+                    distances = kmeans.transform(X_scaled)
+                    if segment_id < distances.shape[1]:
+                        distance_to_centroid = float(distances[0][segment_id])
+                    else:
+                        distance_to_centroid = float(distances[0][0])
+                elif hasattr(kmeans, "cluster_centers_"):
+                    centroid = kmeans.cluster_centers_[segment_id]
+                    distance_to_centroid = float(np.linalg.norm(X_scaled[0] - centroid))
+
+            elif hasattr(pipeline, "transform"):
+                distances = pipeline.transform(df_features)
+                if segment_id < distances.shape[1]:
+                    distance_to_centroid = float(distances[0][segment_id])
+        except Exception as dist_err:
+            logger.warning(f"Could not compute centroid distance: {dist_err}")
+            distance_to_centroid = 0.0
 
     distance_to_centroid = round(float(distance_to_centroid), 4)
 

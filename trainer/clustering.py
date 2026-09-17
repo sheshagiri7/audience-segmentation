@@ -13,6 +13,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+from common.preprocessing import ViewerFeatureExtractor
 
 logger = logging.getLogger("audience_trainer.clustering")
 
@@ -241,8 +242,11 @@ def train_clustering_pipeline(
     # Re-predict using aligned centroids
     final_labels = kmeans.predict(X_scaled)
 
-    # Scikit-learn Pipeline preserving feature names and fitted parameters
+    # Scikit-learn Pipeline preserving feature extractor, scaler, and estimator
+    # Guarantees that inference uses the exact same feature transformations as training
+    extractor = ViewerFeatureExtractor()
     pipeline = Pipeline([
+        ("extractor", extractor),
         ("scaler", scaler),
         ("kmeans", kmeans)
     ])

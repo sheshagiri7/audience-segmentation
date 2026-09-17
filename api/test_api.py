@@ -275,3 +275,47 @@ class TestLiveDataEndpoints:
         assert "silhouette_score" in data
         assert "k_clusters" in data
         assert isinstance(data["cluster_sizes"], list)
+
+
+def test_recommend_with_persisted_extractor_pipeline():
+    """Verify inference works directly when the pipeline embeds ViewerFeatureExtractor."""
+    from common.preprocessing import ViewerFeatureExtractor
+
+    raw_records = pd.DataFrame([
+        {"user_id": f"U{i}", "watch_time_hours": float(i * 10), "avg_session_mins": float(i * 20), "top_genres": ["Action"]}
+        for i in range(10)
+    ])
+
+    pipeline = Pipeline([
+        ("extractor", ViewerFeatureExtractor()),
+        ("scaler", StandardScaler()),
+        ("kmeans", KMeans(n_clusters=4, random_state=42, n_init=10))
+    ])
+    pipeline.fit(raw_records)
+
+    orig_pipe = model_manager.pipeline
+    orig_loaded = model_manager.model_loaded
+    orig_segments = model_manager.segments
+
+    try:
+        model_manager._unpack_pipeline(pipeline)
+        model_manager.model_loaded = True
+        model_manager.segments = DEFAULT_SEGMENTS.copy()
+
+        payload = {
+            "user_id": "USR-EXTRACTOR-TEST",
+            "watch_time_hours": 35.0,
+            "top_genres": ["Action", "Thriller"],
+            "avg_session_mins": 80.0
+        }
+        res = client.post("/recommend", json=payload)
+        assert res.status_code == 200
+        data = res.json()
+        assert data["user_id"] == "USR-EXTRACTOR-TEST"
+        assert isinstance(data["segment_id"], int)
+        assert isinstance(data["distance_to_centroid"], float)
+        assert data["distance_to_centroid"] >= 0.0
+    finally:
+        model_manager.pipeline = orig_pipe
+        model_manager.model_loaded = orig_loaded
+        model_manager.segments = orig_segments
