@@ -65,6 +65,16 @@ export async function checkHealth(): Promise<{
     }
 
     const data: HealthResponse = await res.json();
+    const isAudienceApi = data && ('model_loaded' in data || 'features_count' in data || 'model_type' in data);
+    if (!isAudienceApi) {
+      return {
+        ok: false,
+        data: null,
+        latencyMs,
+        error: 'Target port is occupied by an unrelated service. Please verify Audience Segmentation API container is mapped to port 8000.',
+      };
+    }
+
     return {
       ok: true,
       data,
