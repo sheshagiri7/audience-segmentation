@@ -25,9 +25,9 @@ High-performance, modern React + TypeScript + Tailwind CSS analytics frontend de
    - Side-by-side Segment Comparator.
 
 4. **Model Quality & API Robustness Center:**
-   - Quantitative clustering metrics: Silhouette Score (0.584), Inertia/Elbow, Davies-Bouldin index, and model determinism.
+   - Quantitative clustering metrics: Silhouette Score (0.4238), Inertia (57,394.54), Davies-Bouldin index (1.0673), Calinski-Harabasz score (4,795.60), and model determinism.
    - Cluster balance verification.
-   - Live interactive 10-test API suite executing Section 13 edge cases against the backend container.
+   - Live interactive 15-test API suite executing Section 13 edge cases and cohort representatives against the backend container.
    - `metrics.json` viewer & uploader.
 
 5. **Live API Gateway & Connection Manager:**

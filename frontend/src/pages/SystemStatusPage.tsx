@@ -69,7 +69,7 @@ export const SystemStatusPage: React.FC<SystemStatusPageProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-white/5 gap-1">
             <span className="text-xs text-slate-400 uppercase tracking-widest">API ENDPOINT</span>
             <div className="flex items-center space-x-2">
-              <span className="text-xs text-slate-100 font-bold">{baseUrl}</span>
+              <span className="text-xs text-slate-100 font-bold">{baseUrl || '/api'}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full ${
                 isConnected && health?.status === 'ok'
                   ? 'bg-sky-400/10 text-sky-300 border border-sky-400/30'

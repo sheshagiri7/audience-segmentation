@@ -47,7 +47,7 @@ export interface SegmentArchetype {
   avgWatchTime: number; // hours
   avgSessionMins: number;
   audienceShare: number; // percentage
-  churnRisk: 'Low' | 'Medium' | 'High';
+  churnRisk: 'Low' | 'Medium' | 'High'; // Qualitative domain heuristic based on engagement; NOT an ML model output
   personalizationStrategy: string;
   catalogRecommendationFocus: string;
   retentionTactic: string;

@@ -1,5 +1,12 @@
 import { SegmentArchetype } from '../types/api';
 
+/**
+ * Legacy archetype definitions conforming to Hackathon PS Section 8.
+ * NOTE ON PROVENANCE:
+ * - avgWatchTime, avgSessionMins, audienceShare: Empirical cluster averages measured from data/user_activity.csv.
+ * - name, description, personalizationStrategy, retentionTactic, sampleCatalog: Human-authored domain templates.
+ * - churnRisk: Qualitative business heuristic based on engagement; NOT a machine learning model prediction.
+ */
 export const SEGMENT_ARCHETYPES: SegmentArchetype[] = [
   {
     id: 0,
@@ -10,9 +17,9 @@ export const SEGMENT_ARCHETYPES: SegmentArchetype[] = [
     borderColor: 'border-purple-500/40',
     accentBg: 'bg-purple-500/10',
     dominantGenres: ['Action', 'Thriller', 'Sci-Fi'],
-    avgWatchTime: 38.4,
-    avgSessionMins: 92.5,
-    audienceShare: 32.4,
+    avgWatchTime: 37.53,
+    avgSessionMins: 91.35,
+    audienceShare: 31.82,
     churnRisk: 'Low',
     personalizationStrategy: 'Prioritize premier blockbuster action/thriller catalogs with 4K HDR options, deep-catalog franchise marathons, and early-access thriller series.',
     catalogRecommendationFocus: 'High-stakes action epics, psychological thrillers, sci-fi franchises',
@@ -33,10 +40,10 @@ export const SEGMENT_ARCHETYPES: SegmentArchetype[] = [
     color: '#06B6D4',
     borderColor: 'border-cyan-500/40',
     accentBg: 'bg-cyan-500/10',
-    dominantGenres: ['Comedy', 'Animation', 'Standup'],
-    avgWatchTime: 8.6,
-    avgSessionMins: 24.2,
-    audienceShare: 26.8,
+    dominantGenres: ['Comedy', 'Animation', 'Romance'],
+    avgWatchTime: 7.92,
+    avgSessionMins: 27.37,
+    audienceShare: 36.62,
     churnRisk: 'Medium',
     personalizationStrategy: 'Surface short-form comedy specials, bite-sized episodic series, trending viral segments, and quick-completion series requiring low cognitive friction.',
     catalogRecommendationFocus: '20-minute sitcoms, animated shorts, standup showcases, web episodes',
@@ -57,10 +64,10 @@ export const SEGMENT_ARCHETYPES: SegmentArchetype[] = [
     color: '#10B981',
     borderColor: 'border-emerald-500/40',
     accentBg: 'bg-emerald-500/10',
-    dominantGenres: ['Documentary', 'Drama', 'Mystery', 'International'],
-    avgWatchTime: 26.2,
-    avgSessionMins: 58.0,
-    audienceShare: 24.1,
+    dominantGenres: ['Adventure', 'Drama', 'Mystery'],
+    avgWatchTime: 26.06,
+    avgSessionMins: 58.11,
+    audienceShare: 23.67,
     churnRisk: 'Low',
     personalizationStrategy: 'Mix core preferred genres with controlled, serendipitous discovery of adjacent high-rated foreign films, docuseries, and festival award-winners.',
     catalogRecommendationFocus: 'Award-winning investigative docs, indie festival selections, Nordic noir',
@@ -81,10 +88,10 @@ export const SEGMENT_ARCHETYPES: SegmentArchetype[] = [
     color: '#F59E0B',
     borderColor: 'border-amber-500/40',
     accentBg: 'bg-amber-500/10',
-    dominantGenres: ['Drama', 'Family', 'Trending'],
-    avgWatchTime: 3.1,
-    avgSessionMins: 32.0,
-    audienceShare: 16.7,
+    dominantGenres: ['Drama', 'Family', 'Crime'],
+    avgWatchTime: 3.68,
+    avgSessionMins: 32.79,
+    audienceShare: 7.89,
     churnRisk: 'High',
     personalizationStrategy: 'Do not assume intensive or niche preferences. Surface universally popular, trending Top 10 mainstream hits and blockbuster releases with instant playback.',
     catalogRecommendationFocus: 'Top 10 in Country, Universal Family Hits, Holiday specials',

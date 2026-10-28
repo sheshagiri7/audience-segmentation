@@ -117,7 +117,7 @@ export const BackendStatusModal: React.FC<BackendStatusModalProps> = ({
               type="text"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
-              placeholder="http://localhost:8000"
+              placeholder="/api (Default Proxy)"
               className="flex-1 px-3.5 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs font-mono text-white placeholder-slate-600 focus:outline-none focus:border-sky-400"
             />
             <button
@@ -133,6 +133,12 @@ export const BackendStatusModal: React.FC<BackendStatusModalProps> = ({
           {/* Quick Presets */}
           <div className="flex items-center space-x-2 text-xs">
             <span className="text-slate-500">Presets:</span>
+            <button
+              onClick={() => setPreset('')}
+              className="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-slate-300 font-mono text-[11px] transition"
+            >
+              /api (Default)
+            </button>
             <button
               onClick={() => setPreset('http://localhost:8000')}
               className="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-slate-300 font-mono text-[11px] transition"

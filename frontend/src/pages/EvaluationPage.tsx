@@ -187,7 +187,7 @@ export const EvaluationPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="label-telemetry">SILHOUETTE SCORE</span>
             <span className="text-[10px] font-mono text-sky-400 font-bold border border-sky-500/30 px-2 py-0.5 rounded-full">
-              K={metadata.k_clusters} OPTIMAL
+              K={metadata.k_clusters} SELECTED (MULTI-CRITERIA)
             </span>
           </div>
 
@@ -197,7 +197,7 @@ export const EvaluationPage: React.FC = () => {
               <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 6" />
               {/* Background track */}
               <circle cx="80" cy="80" r="54" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-              {/* Active measurement arc: 0.2798 / 1.0 = ~28% */}
+              {/* Active measurement arc: normalized silhouette score */}
               <circle
                 cx="80"
                 cy="80"
@@ -242,7 +242,7 @@ export const EvaluationPage: React.FC = () => {
             <svg className="w-40 h-40" viewBox="0 0 160 160">
               <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.06)" strokeDasharray="3 5" />
               <circle cx="80" cy="80" r="54" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-              {/* DB index 1.1567 normalized against 3.0 scale */}
+              {/* DB index normalized against 3.0 scale */}
               <circle
                 cx="80"
                 cy="80"
@@ -284,7 +284,7 @@ export const EvaluationPage: React.FC = () => {
             <svg className="w-40 h-40" viewBox="0 0 160 160">
               <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 4" />
               <circle cx="80" cy="80" r="54" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="6" />
-              {/* CH score ~4352 on 6000 scale */}
+              {/* CH score normalized against 6000 scale */}
               <circle
                 cx="80"
                 cy="80"
@@ -456,7 +456,7 @@ export const EvaluationPage: React.FC = () => {
 
       {/* =========================================================================
           API TESTS MISSION-CONTROL MATRIX
-          Status signals for the 9 evaluator test cases
+          Status signals for evaluator test cases
           ========================================================================= */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -466,7 +466,11 @@ export const EvaluationPage: React.FC = () => {
               API Automated Diagnostic Test Cases ({metrics.api_tests.passed}/{metrics.api_tests.total_tests} PASSED)
             </h3>
           </div>
-          <span className="text-xs font-mono text-sky-400">100% SUITE PASS RATE</span>
+          <span className="text-xs font-mono text-sky-400">
+            {liveFinished
+              ? `${Math.round((Object.values(liveResults).filter((r) => r.passed).length / Math.max(Object.values(liveResults).length, 1)) * 100)}% LIVE PASS RATE`
+              : `${Math.round((metrics.api_tests.passed / Math.max(metrics.api_tests.total_tests, 1)) * 100)}% BENCHMARK PASS RATE`}
+          </span>
         </div>
 
         <div className="space-y-2">
@@ -497,7 +501,7 @@ export const EvaluationPage: React.FC = () => {
                       : live ? (live.passed ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/40' : 'bg-rose-950/40 text-rose-400 border-rose-500/40')
                       : 'bg-emerald-950/30 text-emerald-400 border-emerald-500/30'
                   }`}>
-                    {isCurrentlyProbing ? 'PROBING...' : live ? (live.passed ? 'PASS [OK]' : 'FAIL [ERR]') : 'PASS [OK]'}
+                    {isCurrentlyProbing ? 'PROBING...' : live ? (live.passed ? 'LIVE [PASS]' : 'LIVE [FAIL]') : 'BENCHMARK [OK]'}
                   </span>
                 </div>
               </div>
